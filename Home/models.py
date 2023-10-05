@@ -11,7 +11,11 @@ from location_field.models.plain import PlainLocationField
 #Create your models here.
 
 class CustomUser(AbstractUser):
-    types = (("Customer","Customer"),("Restaurent_Owner","Restaurent_Owner"))
+
+    types = (("Customer","customer"),
+             ("Restaurent Owner","owner")
+            )
+
     user_type = models.CharField(max_length=20,choices=types)
     mobile_number = models.CharField(null=True,max_length=10,unique=True,error_messages={
             'unique': _(
@@ -47,13 +51,13 @@ class State(models.Model):
     def __str__(self) -> str:
         return self.name
 
-class Restaurants(models.Model):
+class Restaurant(models.Model):
     owner = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     address = models.TextField()
     opening_time = models.TimeField(auto_now=False)
     closing_time = models.TimeField(auto_now=False)
-    contact_number = models.IntegerField()
+    contact_number = models.CharField(max_length=10)
     cuisines = models.CharField(max_length=20)
     location = PlainLocationField(based_fields=['city'], zoom=7,null = True)
 
@@ -61,7 +65,7 @@ class Restaurants(models.Model):
         return self.name
 
 class RestaurantImage(models.Model):
-    restaurant = models.ForeignKey(Restaurants,on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant,on_delete=models.CASCADE)
     image = models.ImageField(upload_to='pics/restaurants_images')
     name = models.CharField(max_length=50)
 
@@ -69,13 +73,13 @@ class RestaurantImage(models.Model):
         return self.name
     
 class RestaurantMenu(models.Model):
-    restaurant = models.OneToOneField(Restaurants,on_delete=models.CASCADE)
+    restaurant = models.OneToOneField(Restaurant,on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
 
     def __str__(self) -> str:
         return self.name
     
-class MenuItems(models.Model):
+class MenuItem(models.Model):
     restaurant = models.ManyToManyField(RestaurantMenu)
     name = models.CharField(max_length=30)
     price = models.IntegerField()
@@ -87,7 +91,7 @@ class MenuItems(models.Model):
     def __str__(self) -> str:
         return self.name
 
-class Notificatons(models.Model):
+class Notificaton(models.Model):
     user = models.ManyToManyField(CustomUser)
     headline = models.CharField(max_length=20)
     text = models.TextField(max_length=100)
@@ -95,9 +99,9 @@ class Notificatons(models.Model):
     def __str__(self) -> str:
         return self.headline
     
-class RestaurantFollowers(models.Model):
+class RestaurantFollower(models.Model):
     followers = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-    following = models.ForeignKey(Restaurants,on_delete=models.CASCADE)
+    following = models.ForeignKey(Restaurant,on_delete=models.CASCADE)
 
 
 

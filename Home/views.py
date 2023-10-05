@@ -58,8 +58,8 @@ class LoginFormView(View):
             )
             if user is not None:
                 auth.login(request, user)
-                if user.user_type == "Customer" :
-                    return redirect('/customer') 
+                if user.user_type == "customer" :
+                    return redirect('/') 
                 else:
                     return redirect('/owner') 
             

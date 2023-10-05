@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser,Restaurants,State,City
+from .models import *
 # Register your models here
 
 from django.contrib.auth.admin import UserAdmin
@@ -21,6 +21,11 @@ class CustomUserAdmin(UserAdmin):
         list_display = ('email', 'first_name', 'last_name', 'is_staff')
         search_fields = ('email', 'first_name', 'last_name')
         ordering = ('email',)
-admin.site.register(Restaurants)
+admin.site.register(Restaurant)
 admin.site.register(City)
 admin.site.register(State)
+admin.site.register(RestaurantImage)
+admin.site.register(RestaurantFollower)
+admin.site.register(MenuItem)
+admin.site.register(Notificaton)
+admin.site.register(RestaurantMenu)
